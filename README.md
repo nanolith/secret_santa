@@ -57,7 +57,7 @@ A second file, called `preferences.txt` contains lines with an e-mail address
 and the filename for a preferences file.  This file should be HTML, and will be
 displayed to the assigned user as HTML.  For example:
 
-    john.smith@example.com    john_smith_preferences.html
+    <john.smith@example.com>    john_smith_preferences.html
 
 The path to the file name should resolve to something that the app can find.
 This will be bundled into the deployment tarball.
