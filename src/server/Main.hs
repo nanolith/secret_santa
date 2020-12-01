@@ -13,7 +13,8 @@ import System.IO.Streams as Streams
 data Files = Files {
     mainHtml :: ByteString,
     mainCss :: ByteString,
-    mainJs :: ByteString
+    mainJs :: ByteString,
+    axlsignJs :: ByteString
     }
 
 main :: IO ()
@@ -32,11 +33,13 @@ readStaticFiles = do
     mainHtmlFile <- readStaticFile "static/main.html"
     mainCssFile <- readStaticFile "static/main.css"
     mainJsFile <- readStaticFile "static/main.js"
+    axlsignJsFile <- readStaticFile "static/axlsign.js"
     return $
         Files {
             mainHtml = mainHtmlFile,
             mainCss = mainCssFile,
-            mainJs = mainJsFile }
+            mainJs = mainJsFile,
+            axlsignJs = axlsignJsFile }
 
 site :: Files -> Snap ()
 site files =
@@ -45,7 +48,9 @@ site files =
           , ("user/login", loginUser)
           , ("static/main.css", serveStatic "text/css" $ mainCss files)
           , ("static/main.js",
-                serveStatic "application/javascript" $ mainJs files) ]
+                serveStatic "application/javascript" $ mainJs files)
+          , ("static/axlsign.js",
+                serveStatic "application/javascript" $ axlsignJs files) ]
 
 topLevel :: ByteString -> Snap ()
 topLevel file =
