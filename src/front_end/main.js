@@ -20,11 +20,7 @@ function loginMenuSelected() {
     setMenuState(MENUSTATE_LOGIN);
 }
 
-function register() {
-    var email = getValue("regemail");
-    var name = getValue("name");
-    var pass1 = getValue("password1");
-    var pass2 = getValue("password2");
+function registerValidation(email, name, pass1, pass2) {
     var fail = false;
 
     clearValidators();
@@ -57,15 +53,26 @@ function register() {
 
     if (fail) {
         setSpan("validateRegistration", "Fix validation errors below.");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function register() {
+    var email = getValue("regemail");
+    var name = getValue("name");
+    var pass1 = getValue("password1");
+    var pass2 = getValue("password2");
+
+    if (!registerValidation(email, name, pass1, pass2)) {
         return;
     }
 
     setMenuState(-1);
 }
 
-function login() {
-    var email = getValue("email");
-    var password = getValue("password");
+function loginValidation(email, password) {
     var fail = false;
 
     clearValidators();
@@ -82,6 +89,17 @@ function login() {
 
     if (fail) {
         setSpan("validateLogin", "Fix validation errors below.");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function login() {
+    var email = getValue("email");
+    var password = getValue("password");
+
+    if (!loginValidation(email, password)) {
         return;
     }
 
