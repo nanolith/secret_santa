@@ -1,20 +1,21 @@
 (function(axlsign) {
 
-// Curve25519 signatures (and also key agreement)
-// like in the early Axolotl.
-//
-// Written by Dmitry Chestnykh.
-// You can use it under MIT or CC0 license.
-
-// Curve25519 signatures idea and math by Trevor Perrin
-// https://moderncrypto.org/mail-archive/curves/2014/000205.html
-
-// Derived from TweetNaCl.js (https://tweetnacl.js.org/)
-// Ported in 2014 by Dmitry Chestnykh and Devi Mandiri.
-// Public domain.
-//
-// Implementation derived from TweetNaCl version 20140427.
-// See for details: http://tweetnacl.cr.yp.to/
+/* Curve25519 signatures (and also key agreement)
+ * like in the early Axolotl.
+ *
+ * Written by Dmitry Chestnykh.
+ * You can use it under MIT or CC0 license.
+ *
+ * Curve25519 signatures idea and math by Trevor Perrin
+ * https://moderncrypto.org/mail-archive/curves/2014/000205.html
+ *
+ * Derived from TweetNaCl.js (https://tweetnacl.js.org/)
+ * Ported in 2014 by Dmitry Chestnykh and Devi Mandiri.
+ * Public domain.
+ *
+ * Implementation derived from TweetNaCl version 20140427.
+ * See for details: http://tweetnacl.cr.yp.to/
+ */
 
 var gf = function(init) {
   var i, r = new Float64Array(16);
@@ -441,9 +442,9 @@ function M(o, a, b) {
   t12 += 38 * t28;
   t13 += 38 * t29;
   t14 += 38 * t30;
-  // t15 left as is
+  /* t15 left as is */
 
-  // first car
+  /* first car */
   c = 1;
   v =  t0 + c + 65535; c = Math.floor(v / 65536);  t0 = v - c * 65536;
   v =  t1 + c + 65535; c = Math.floor(v / 65536);  t1 = v - c * 65536;
@@ -463,7 +464,7 @@ function M(o, a, b) {
   v = t15 + c + 65535; c = Math.floor(v / 65536); t15 = v - c * 65536;
   t0 += c-1 + 37 * (c-1);
 
-  // second car
+  /* second car */
   c = 1;
   v =  t0 + c + 65535; c = Math.floor(v / 65536);  t0 = v - c * 65536;
   v =  t1 + c + 65535; c = Math.floor(v / 65536);  t1 = v - c * 65536;
@@ -677,35 +678,35 @@ function crypto_hashblocks_hl(hh, hl, m, n) {
       bl6 = al6;
       bl7 = al7;
 
-      // add
+      /* add */
       h = ah7;
       l = al7;
 
       a = l & 0xffff; b = l >>> 16;
       c = h & 0xffff; d = h >>> 16;
 
-      // Sigma1
+      /* Sigma1 */
       h = ((ah4 >>> 14) | (al4 << (32-14))) ^ ((ah4 >>> 18) | (al4 << (32-18))) ^ ((al4 >>> (41-32)) | (ah4 << (32-(41-32))));
       l = ((al4 >>> 14) | (ah4 << (32-14))) ^ ((al4 >>> 18) | (ah4 << (32-18))) ^ ((ah4 >>> (41-32)) | (al4 << (32-(41-32))));
 
       a += l & 0xffff; b += l >>> 16;
       c += h & 0xffff; d += h >>> 16;
 
-      // Ch
+      /* Ch */
       h = (ah4 & ah5) ^ (~ah4 & ah6);
       l = (al4 & al5) ^ (~al4 & al6);
 
       a += l & 0xffff; b += l >>> 16;
       c += h & 0xffff; d += h >>> 16;
 
-      // K
+      /* K */
       h = K[i*2];
       l = K[i*2+1];
 
       a += l & 0xffff; b += l >>> 16;
       c += h & 0xffff; d += h >>> 16;
 
-      // w
+      /* w */
       h = wh[i%16];
       l = wl[i%16];
 
@@ -719,21 +720,21 @@ function crypto_hashblocks_hl(hh, hl, m, n) {
       th = c & 0xffff | d << 16;
       tl = a & 0xffff | b << 16;
 
-      // add
+      /* add */
       h = th;
       l = tl;
 
       a = l & 0xffff; b = l >>> 16;
       c = h & 0xffff; d = h >>> 16;
 
-      // Sigma0
+      /* Sigma0 */
       h = ((ah0 >>> 28) | (al0 << (32-28))) ^ ((al0 >>> (34-32)) | (ah0 << (32-(34-32)))) ^ ((al0 >>> (39-32)) | (ah0 << (32-(39-32))));
       l = ((al0 >>> 28) | (ah0 << (32-28))) ^ ((ah0 >>> (34-32)) | (al0 << (32-(34-32)))) ^ ((ah0 >>> (39-32)) | (al0 << (32-(39-32))));
 
       a += l & 0xffff; b += l >>> 16;
       c += h & 0xffff; d += h >>> 16;
 
-      // Maj
+      /* Maj */
       h = (ah0 & ah1) ^ (ah0 & ah2) ^ (ah1 & ah2);
       l = (al0 & al1) ^ (al0 & al2) ^ (al1 & al2);
 
@@ -747,7 +748,7 @@ function crypto_hashblocks_hl(hh, hl, m, n) {
       bh7 = (c & 0xffff) | (d << 16);
       bl7 = (a & 0xffff) | (b << 16);
 
-      // add
+      /* add */
       h = bh3;
       l = bl3;
 
@@ -787,7 +788,7 @@ function crypto_hashblocks_hl(hh, hl, m, n) {
 
       if (i%16 === 15) {
         for (j = 0; j < 16; j++) {
-          // add
+          /* add */
           h = wh[j];
           l = wl[j];
 
@@ -800,7 +801,7 @@ function crypto_hashblocks_hl(hh, hl, m, n) {
           a += l & 0xffff; b += l >>> 16;
           c += h & 0xffff; d += h >>> 16;
 
-          // sigma0
+          /* sigma0 */
           th = wh[(j+1)%16];
           tl = wl[(j+1)%16];
           h = ((th >>> 1) | (tl << (32-1))) ^ ((th >>> 8) | (tl << (32-8))) ^ (th >>> 7);
@@ -809,7 +810,7 @@ function crypto_hashblocks_hl(hh, hl, m, n) {
           a += l & 0xffff; b += l >>> 16;
           c += h & 0xffff; d += h >>> 16;
 
-          // sigma1
+          /* sigma1 */
           th = wh[(j+14)%16];
           tl = wl[(j+14)%16];
           h = ((th >>> 19) | (tl << (32-19))) ^ ((tl >>> (61-32)) | (th << (32-(61-32)))) ^ (th >>> 6);
@@ -828,7 +829,7 @@ function crypto_hashblocks_hl(hh, hl, m, n) {
       }
     }
 
-    // add
+    /* add */
     h = ah0;
     l = al0;
 
@@ -1128,7 +1129,7 @@ function reduce(r) {
   modL(r, x);
 }
 
-// Like crypto_sign, but uses secret key directly in hash.
+/* Like crypto_sign, but uses secret key directly in hash. */
 function crypto_sign_direct(sm, m, n, sk) {
   var d = new Uint8Array(64), h = new Uint8Array(64), r = new Uint8Array(64);
   var i, j, x = new Float64Array(64);
@@ -1158,23 +1159,23 @@ function crypto_sign_direct(sm, m, n, sk) {
   return n + 64;
 }
 
-// Note: sm must be n+128.
+/* Note: sm must be n+128. */
 function crypto_sign_direct_rnd(sm, m, n, sk, rnd) {
   var d = new Uint8Array(64), h = new Uint8Array(64), r = new Uint8Array(64);
   var i, j, x = new Float64Array(64);
   var p = [gf(), gf(), gf(), gf()];
 
-  // Hash separation.
+  /* Hash separation. */
   sm[0] = 0xfe;
   for (i = 1; i < 32; i++) sm[i] = 0xff;
 
-  // Secret key.
+  /* Secret key. */
   for (i = 0; i < 32; i++) sm[32 + i] = sk[i];
 
-  // Message.
+  /* Message. */
   for (i = 0; i < n; i++) sm[64 + i] = m[i];
 
-  // Random suffix.
+  /* Random suffix. */
   for (i = 0; i < 64; i++) sm[n + 64 + i] = rnd[i];
 
   crypto_hash(r, sm, n+128);
@@ -1186,7 +1187,7 @@ function crypto_sign_direct_rnd(sm, m, n, sk, rnd) {
   crypto_hash(h, sm, n + 64);
   reduce(h);
 
-  // Wipe out random suffix.
+  /* Wipe out random suffix. */
   for (i = 0; i < 64; i++) sm[n + 64 + i] = 0;
 
   for (i = 0; i < 64; i++) x[i] = 0;
@@ -1204,15 +1205,15 @@ function crypto_sign_direct_rnd(sm, m, n, sk, rnd) {
 
 
 function curve25519_sign(sm, m, n, sk, opt_rnd) {
-  // If opt_rnd is provided, sm must have n + 128,
-  // otherwise it must have n + 64 bytes.
+  /* If opt_rnd is provided, sm must have n + 128, */
+  /* otherwise it must have n + 64 bytes. */
 
-  // Convert Curve25519 secret key into Ed25519 secret key (includes pub key).
+  /* Convert Curve25519 secret key into Ed25519 secret key (with pub key). */
   var edsk = new Uint8Array(64);
   var p = [gf(), gf(), gf(), gf()];
 
   for (var i = 0; i < 32; i++) edsk[i] = sk[i];
-  // Ensure private key is in the correct format.
+  /* Ensure private key is in the correct format. */
   edsk[0] &= 248;
   edsk[31] &= 127;
   edsk[31] |= 64;
@@ -1220,7 +1221,7 @@ function curve25519_sign(sm, m, n, sk, opt_rnd) {
   scalarbase(p, edsk);
   pack(edsk.subarray(32), p);
 
-  // Remember sign bit.
+  /* Remember sign bit. */
   var signBit = edsk[63] & 128;
   var smlen;
 
@@ -1230,7 +1231,7 @@ function curve25519_sign(sm, m, n, sk, opt_rnd) {
     smlen = crypto_sign_direct(sm, m, n, edsk);
   }
 
-  // Copy sign bit from public key into signature.
+  /* Copy sign bit from public key into signature. */
   sm[63] |= signBit;
   return smlen;
 }
@@ -1305,8 +1306,8 @@ function crypto_sign_open(m, sm, n, pk) {
   return mlen;
 }
 
-// Converts Curve25519 public key back to Ed25519 public key.
-// edwardsY = (montgomeryX - 1) / (montgomeryX + 1)
+/* Converts Curve25519 public key back to Ed25519 public key. */
+/* edwardsY = (montgomeryX - 1) / (montgomeryX + 1) */
 function convertPublicKey(pk) {
   var z = new Uint8Array(32),
       x = gf(), a = gf(), b = gf();
@@ -1323,16 +1324,16 @@ function convertPublicKey(pk) {
 }
 
 function curve25519_sign_open(m, sm, n, pk) {
-  // Convert Curve25519 public key into Ed25519 public key.
+  /* Convert Curve25519 public key into Ed25519 public key. */
   var edpk = convertPublicKey(pk);
 
-  // Restore sign bit from signature.
+  /* Restore sign bit from signature. */
   edpk[31] |= sm[63] & 128;
 
-  // Remove sign bit from signature.
+  /* Remove sign bit from signature. */
   sm[63] &= 127;
 
-  // Verify signed message.
+  /* Verify signed message. */
   return crypto_sign_open(m, sm, n, edpk);
 }
 
@@ -1359,7 +1360,7 @@ axlsign.signMessage = function(secretKey, msg, opt_random) {
   checkArrayTypes(msg, secretKey);
   if (secretKey.length !== 32) throw new Error('wrong secret key length');
   if (opt_random) {
-    checkArrayTypes(opt_random)
+    checkArrayTypes(opt_random);
     if (opt_random.length !== 64) throw new Error('wrong random data length');
     var buf = new Uint8Array(128 + msg.length);
     curve25519_sign(buf, msg, msg.length, secretKey, opt_random);
@@ -1369,7 +1370,7 @@ axlsign.signMessage = function(secretKey, msg, opt_random) {
     curve25519_sign(signedMsg, msg, msg.length, secretKey);
     return signedMsg;
   }
-}
+};
 
 axlsign.openMessage = function(publicKey, signedMsg) {
   checkArrayTypes(signedMsg, publicKey);
@@ -1418,12 +1419,12 @@ axlsign.generateKeyPair = function(seed) {
 
   crypto_scalarmult_base(pk, sk);
 
-  // Turn secret key into the correct format.
+  /* Turn secret key into the correct format. */
   sk[0] &= 248;
   sk[31] &= 127;
   sk[31] |= 64;
 
-  // Remove sign bit from public key.
+  /* Remove sign bit from public key. */
   pk[31] &= 127;
 
   return {
