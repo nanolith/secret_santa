@@ -3,7 +3,7 @@
 module Main where
 
 import Control.Applicative
-import Data.ByteString as B
+import Data.ByteString.Char8 as B
 import Data.ByteString.Builder as Builder
 import Snap.Core
 import Snap.Http.Server
@@ -22,11 +22,16 @@ main = do
     files <- readStaticFiles
     quickHttpServe $ site files
 
+minify :: ByteString -> ByteString
+minify = B.pack . Prelude.unwords . Prelude.words . B.unpack
+
 readStaticFile :: String -> IO ByteString
 readStaticFile filename = do
-    withFile filename ReadMode $ do
-        \fileHandle ->
-            B.hGetContents fileHandle
+    contents <- 
+        withFile filename ReadMode $ do
+            \fileHandle ->
+                B.hGetContents fileHandle
+    return $ minify contents
 
 readStaticFiles :: IO Files
 readStaticFiles = do
