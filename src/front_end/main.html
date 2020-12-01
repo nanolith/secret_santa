@@ -19,12 +19,48 @@
             <form>
                 <table>
                     <tr>
+                        <td colspan="2">
+                            <span id="validateRegistration" class="validator"/>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>E-mail:</td>
-                        <td><input type="text" name="email" value=""/></td>
+                        <td>
+                            <input type="text" name="email"
+                                   id="regemail" value=""/>
+                        </td>
+                        <td>
+                            <span id="validateEmail1" class="validator"/>
+                        </td>
                     </tr>
                     <tr>
                         <td>Full Name:</td>
-                        <td><input type="text" name="name" value=""/></td>
+                        <td>
+                            <input type="text" name="name" id="name" value=""/>
+                        </td>
+                        <td>
+                            <span id="validateName" class="validator"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Password:</td>
+                        <td>
+                            <input type="password" name="password1"
+                                   id="password1" value=""/>
+                        </td>
+                        <td>
+                            <span id="validatePassword1" class="validator"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Retype Password:</td>
+                        <td>
+                            <input type="password" name="password2"
+                                   id="password2" value=""/>
+                        </td>
+                        <td>
+                            <span id="validatePassword2" class="validator"/>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center">
@@ -39,13 +75,28 @@
             <form>
                 <table>
                     <tr>
+                        <td colspan="2">
+                            <span id="validateLogin" class="validator"/>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>E-mail:</td>
-                        <td><input type="text" name="email" value=""/></td>
+                        <td>
+                            <input type="text" name="email" id="email"
+                                   value=""/>
+                        </td>
+                        <td>
+                            <span id="validateEmail" class="validator"/>
+                        </td>
                     </tr>
                     <tr>
                         <td>Password:</td>
                         <td>
-                            <input type="password" name="password" value=""/>
+                            <input type="password" name="password"
+                                   id="password" value=""/>
+                        </td>
+                        <td>
+                            <span id="validatePassword" class="validator"/>
                         </td>
                     </tr>
                     <tr>
