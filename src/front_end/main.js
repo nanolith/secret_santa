@@ -59,6 +59,36 @@ function registerValidation(email, name, pass1, pass2) {
     }
 }
 
+function createRandomSalt() {
+    var salt = new Uint8Array(32);
+    crypto.getRandomValues(salt);
+
+    return salt;
+}
+
+function createKeyFromPassword(salt, password) {
+    var enc = new TextEncoder();
+    var convertedPassword = enc.encode(password);
+
+    return
+        (async(salt, convertedPassword) => {
+            var importedKey =
+                await crypto.subtle.importKey(
+                    "raw", convertedPassword, {name: "PBKDF2"}, false,
+                    ["deriveKey", "deriveBits"]);
+
+            var secretKey =
+                await crypto.subtle.deriveKey(
+                    {"name": "PBKDF2", "salt": salt, "iterations": 5000,
+                     "hash": "SHA-256"},
+                    importedKey,
+                    {"name": "AES-CBC", "length": 256}, true,
+                    ["encrypt", "decrypt"]);
+
+            return secretKey;
+        })(salt, convertedPassword);
+}
+
 function register() {
     var email = getValue("regemail");
     var name = getValue("name");
@@ -69,7 +99,16 @@ function register() {
         return;
     }
 
-    setMenuState(-1);
+    (async (email, name, pass1) => {
+        var salt = createRandomSalt();
+        var key = await createKeyFromPassword(salt, pass1);
+        var keypair = axlsign.generateKeyPair(createRandomSalt());
+
+        /* TODO: create object holding private key (encrypted and HMACed with
+                 public key), email, and salt. Send to user registration. */
+
+        setMenuState(-1);
+    })(email, name, pass1);
 }
 
 function loginValidation(email, password) {
