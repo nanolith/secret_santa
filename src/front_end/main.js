@@ -66,7 +66,14 @@ function createRandomSalt() {
     return salt;
 }
 
-function createKeyFromPassword(salt, password) {
+function createRandomIV() {
+    var iv = new Uint8Array(16);
+    crypto.getRandomValues(iv);
+
+    return iv;
+}
+
+function createKeysFromPassword(salt, password) {
     var enc = new TextEncoder();
     var convertedPassword = enc.encode(password);
 
@@ -80,12 +87,20 @@ function createKeyFromPassword(salt, password) {
             var secretKey =
                 await crypto.subtle.deriveKey(
                     {"name": "PBKDF2", "salt": salt, "iterations": 5000,
-                     "hash": "SHA-256"},
+                     "hash": "SHA-384"},
                     importedKey,
-                    {"name": "AES-CBC", "length": 256}, true,
+                    {"name": "AES-CBC", "length": 256}, false,
                     ["encrypt", "decrypt"]);
 
-            return secretKey;
+            var hmacSecretKey =
+                await crypto.subtle.deriveKey(
+                    {"name": "PBKDF2", "salt": salt, "iterations": 5000,
+                     "hash": "SHA-384"},
+                    importedKey,
+                    {"name": "HMAC", "hash": "SHA-384"}, false,
+                    ["sign", "verify"]);
+
+            return {"encryptKey" : secretKey, "hmacKey" : hmacSecretKey};
         })(salt, convertedPassword);
 }
 
@@ -101,11 +116,37 @@ function register() {
 
     (async (email, name, pass1) => {
         var salt = createRandomSalt();
-        var key = await createKeyFromPassword(salt, pass1);
+        var keys = await createKeysFromPassword(salt, pass1);
+        var encryptKey = keys.encryptKey;
+        var hmacKey = keys.hmacKey;
         var keypair = axlsign.generateKeyPair(createRandomSalt());
 
-        /* TODO: create object holding private key (encrypted and HMACed with
-                 public key), email, and salt. Send to user registration. */
+        var encObj = { "keypair" : keypair };
+        var encString = JSON.stringify(encObj);
+
+        var enc = new TextEncoder();
+        var convEncData = enc.encode(encString);
+        var iv = createRandomIV();
+        var encData =
+            await crypto.subtle.encrypt(
+                {"name" : "AES-CBC", "iv" : iv}, encryptKey, convEncData);
+        var encDataBytes = new Uint8Array(encData);
+        var signature =
+            await crypto.subtle.sign("HMAC", hmacKey, encData);
+        var signatureBytes = new Uint8Array(signature);
+
+        var obj = {
+            "email" : email,
+            "name" : name,
+            "salt" : salt,
+            "pubkey" : keypair.public,
+            "iv" : iv,
+            "encdata" : encDataBytes,
+            "mac" : signatureBytes };
+
+        var objStr = JSON.stringify(obj);
+
+        /* TODO - send objStr to user registration. */
 
         setMenuState(-1);
     })(email, name, pass1);
