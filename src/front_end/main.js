@@ -5,8 +5,11 @@ const MENUSTATE_LOGIN = 2;
 var currentState = -1;
 
 function onLoad() {
-    currentState = -1;
-    setMenuState(MENUSTATE_INIT);
+    (async () => {
+        await import('/static/axlsign.js');
+        currentState = -1;
+        setMenuState(MENUSTATE_INIT);
+    })();
 }
 
 function registerMenuSelected() {
