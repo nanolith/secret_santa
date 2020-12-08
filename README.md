@@ -1,6 +1,10 @@
 Secret Santa App
 ================
 
+**On Hiatus**
+
+This project has been temporarily suspended until next year.
+
 The Secret Santa App is written in a combination of Haskell (assignment client
 and web server) and Javascript (front-end).  This app manages a Secret Santa
 campaign, in which people are randomly assigned a person to give a gift.
